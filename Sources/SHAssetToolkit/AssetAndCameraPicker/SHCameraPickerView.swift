@@ -52,13 +52,13 @@ public struct SHCameraPickerView: UIViewControllerRepresentable {
 
     @Environment(\.dismiss) private var dismiss
 
-    var onAssetPicked: ((URL) -> Void)?
+    public var onAssetPicked: ((URL) -> Void)?
 
-    func makeCoordinator() -> Coordinator {
+    public func makeCoordinator() -> Coordinator {
         Coordinator(parent: self)
     }
 
-    func makeUIViewController(context: Context) -> UIImagePickerController {
+    public func makeUIViewController(context: Context) -> UIImagePickerController {
         let picker = UIImagePickerController()
         picker.delegate = context.coordinator
         picker.sourceType = .camera
@@ -68,5 +68,5 @@ public struct SHCameraPickerView: UIViewControllerRepresentable {
         return picker
     }
 
-    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
+    public func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
 }
