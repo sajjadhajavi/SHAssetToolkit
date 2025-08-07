@@ -25,16 +25,16 @@ import AVKit
         }
     }
 }
-struct SHVideoPlayerView: View {
+public struct SHVideoPlayerView: View {
     @Binding var isPortrait: Bool
     @State private var isPlaying: Bool = false
     @StateObject private var playerVM: PlayerViewModel
-    init(url: String, isPortrait: Binding<Bool>) {
+    public init(url: String, isPortrait: Binding<Bool>) {
         _playerVM = StateObject(wrappedValue: PlayerViewModel(url: url))
         self._isPortrait = isPortrait
     }
 
-    var body: some View {
+    public var body: some View {
         VideoPlayer(player: playerVM.player)
             .aspectRatio(isPortrait ? 9/16 : 16/9, contentMode: .fit)
             .clipShape(RoundedRectangle(cornerRadius: 10))

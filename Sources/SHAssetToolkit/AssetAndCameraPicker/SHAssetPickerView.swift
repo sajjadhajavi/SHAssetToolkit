@@ -8,15 +8,15 @@
 import PhotosUI
 import SwiftUI
 
-struct SHAssetPickerView: UIViewControllerRepresentable {
+public struct SHAssetPickerView: UIViewControllerRepresentable {
     var selectionLimit: Int = 0
     var onPick: ([PHAsset]) -> Void
 
-    func makeCoordinator() -> Coordinator {
+    public func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
 
-    func makeUIViewController(context: Context) -> PHPickerViewController {
+    public func makeUIViewController(context: Context) -> PHPickerViewController {
         var config = PHPickerConfiguration(photoLibrary: PHPhotoLibrary.shared())
         config.selectionLimit = selectionLimit // 0 means no limit
         config.filter = .any(of: [.images, .videos])
@@ -26,16 +26,16 @@ struct SHAssetPickerView: UIViewControllerRepresentable {
         return picker
     }
 
-    func updateUIViewController(_ uiViewController: PHPickerViewController, context: Context) {}
+    public func updateUIViewController(_ uiViewController: PHPickerViewController, context: Context) {}
 
-    class Coordinator: NSObject, PHPickerViewControllerDelegate {
+    public class Coordinator: NSObject, PHPickerViewControllerDelegate {
         let parent: SHAssetPickerView
 
         init(_ parent: SHAssetPickerView) {
             self.parent = parent
         }
 
-        func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        public func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
             if results.isEmpty {
                 picker.dismiss(animated: true)
             }

@@ -9,15 +9,15 @@
 import UIKit
 import SwiftUI
 
-struct SHCameraPickerView: UIViewControllerRepresentable {
-    class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+public struct SHCameraPickerView: UIViewControllerRepresentable {
+    public class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
         private let parent: SHCameraPickerView
 
         init(parent: SHCameraPickerView) {
             self.parent = parent
         }
 
-        func imagePickerController(_ picker: UIImagePickerController,
+        public func imagePickerController(_ picker: UIImagePickerController,
                                    didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
 
             if let mediaType = info[.mediaType] as? String {
@@ -45,7 +45,7 @@ struct SHCameraPickerView: UIViewControllerRepresentable {
         }
 
 
-        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
             parent.dismiss()
         }
     }
