@@ -10,7 +10,7 @@ import AVKit
 
 @MainActor class PlayerViewModel: ObservableObject {
     let player: AVPlayer
-    private var url = ""
+    var url = ""
     init(url: String) {
         self.url = url
         player = AVPlayer(url: url.asUrl)
@@ -28,6 +28,7 @@ import AVKit
 public struct SHVideoPlayerView: View {
     @Binding var isPortrait: Bool
     @State private var isPlaying: Bool = false
+    @State private var localIsPortrait: Bool = false
     @StateObject private var playerVM: PlayerViewModel
     public init(url: String, isPortrait: Binding<Bool>) {
         _playerVM = StateObject(wrappedValue: PlayerViewModel(url: url))
@@ -36,8 +37,7 @@ public struct SHVideoPlayerView: View {
 
     public var body: some View {
         VideoPlayer(player: playerVM.player)
-            .aspectRatio(isPortrait ? 9/16 : 16/9, contentMode: .fit)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .aspectRatio((localIsPortrait || isPortrait) ? 9/16 : 16/9, contentMode: .fit)
             .overlay {
                 if !isPlaying {
                     Button {
@@ -49,6 +49,10 @@ public struct SHVideoPlayerView: View {
                             .foregroundStyle(.white)
                     }
                 }
+            }
+            .task {
+                let thumbnail = await playerVM.url.asUrl.generateThumbnail()
+                localIsPortrait = thumbnail?.size.height ?? 0 > thumbnail?.size.width ?? 0
             }
     }
 }
