@@ -9,8 +9,12 @@ import PhotosUI
 import SwiftUI
 
 public struct SHAssetPickerView: UIViewControllerRepresentable {
-    var selectionLimit: Int = 0
-    var onPick: ([PHAsset]) -> Void
+    public init(selectionLimit: Int = 0, onPick: @escaping ([PHAsset]) -> Void) {
+        self.selectionLimit = selectionLimit
+        self.onPick = onPick
+    }
+    let selectionLimit: Int
+    let onPick: ([PHAsset]) -> Void
 
     public func makeCoordinator() -> Coordinator {
         Coordinator(self)

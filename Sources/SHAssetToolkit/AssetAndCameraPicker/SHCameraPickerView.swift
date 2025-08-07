@@ -10,6 +10,29 @@ import UIKit
 import SwiftUI
 
 public struct SHCameraPickerView: UIViewControllerRepresentable {
+    @Environment(\.dismiss) private var dismiss
+
+    public init(onAssetPicked: (@escaping (URL) -> Void)) {
+        self.onAssetPicked = onAssetPicked
+    }
+    let onAssetPicked: ((URL) -> Void)
+
+    public func makeCoordinator() -> Coordinator {
+        Coordinator(parent: self)
+    }
+
+    public func makeUIViewController(context: Context) -> UIImagePickerController {
+        let picker = UIImagePickerController()
+        picker.delegate = context.coordinator
+        picker.sourceType = .camera
+        picker.mediaTypes = ["public.image", "public.movie"]
+        picker.videoQuality = .typeHigh
+        picker.allowsEditing = false
+        return picker
+    }
+
+    public func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
+
     public class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
         private let parent: SHCameraPickerView
 
@@ -32,14 +55,14 @@ public struct SHCameraPickerView: UIViewControllerRepresentable {
 
                         do {
                             try imageData.write(to: fileURL)
-                            parent.onAssetPicked?(fileURL) // You now have the image URL
+                            parent.onAssetPicked(fileURL) // You now have the image URL
                         } catch {
                             print("Failed to write image to disk: \(error)")
                         }
                     }
                 } else if mediaType == "public.movie",
                           let videoURL = info[.mediaURL] as? URL {
-                    parent.onAssetPicked?(videoURL)
+                    parent.onAssetPicked(videoURL)
                 }
             }
         }
@@ -49,24 +72,4 @@ public struct SHCameraPickerView: UIViewControllerRepresentable {
             parent.dismiss()
         }
     }
-
-    @Environment(\.dismiss) private var dismiss
-
-    public var onAssetPicked: ((URL) -> Void)?
-
-    public func makeCoordinator() -> Coordinator {
-        Coordinator(parent: self)
-    }
-
-    public func makeUIViewController(context: Context) -> UIImagePickerController {
-        let picker = UIImagePickerController()
-        picker.delegate = context.coordinator
-        picker.sourceType = .camera
-        picker.mediaTypes = ["public.image", "public.movie"]
-        picker.videoQuality = .typeHigh
-        picker.allowsEditing = false
-        return picker
-    }
-
-    public func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
 }
